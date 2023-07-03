@@ -18,7 +18,7 @@ const showLoginModal: Ref<Boolean> = ref(false);
       </div>
     </div>
     <modal-card v-if="showLoginModal" @close-modal="showLoginModal=false" modal-title="Log in">
-      <login-form></login-form>
+      <login-form @close-form="showLoginModal=false"></login-form>
     </modal-card>
   </div>
 </template>

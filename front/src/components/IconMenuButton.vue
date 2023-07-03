@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
+import type MenuContent from "../types/MenuContent";
 
 document.addEventListener("click", handleOutsideClick);
+
 interface Props {
   iconPath: string;
-  menuContent: String[];
+  menuContent: MenuContent[];
 }
 const showMenu: Ref<Boolean> = ref(false);
 
@@ -42,7 +44,8 @@ function handleOutsideClick(event: Event) {
           role="menuitem"
           tabindex="-1"
           :id="`user-menu-item-${index}`"
-          >{{ content }}</a
+          @click="content.callbackFunction"
+          >{{ content.title }}</a
         >
       </div>
     </div>

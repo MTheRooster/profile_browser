@@ -17,9 +17,9 @@ const emit = defineEmits<{closeModal: []}>()
       <div
         class="fixed inset-0 bg-gray-950 bg-opacity-70 transition-opacity"
       ></div>
-      <div class="fixed inset-x-0 top-40 z-10 overflow-y-auto">
+      <div class="fixed inset-x-0 top-40 z-10 overflow-y-auto  max-h-[42rem]">
         <div
-          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 "
         >
           <div class="relative bg-white rounded-lg px-4 pb-4 pt-5 md:p-6 md:pb-4">
             <div class="absolute right-2 top-1 text-black text-xl cursor-pointer hover:bg-red-400 p-1 rounded-md font-semibold hover:text-white" @click="emit('closeModal')">X</div>
