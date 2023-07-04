@@ -2,25 +2,32 @@
 import { ref, onMounted } from "vue";
 import data from "../data/profiles";
 import Profile from "../types/Profile";
-
+import profileService from "../services/ProfileService"
+import ProgressCircular from "./ProgressCircular.vue"
 
 const props = defineProps<{
-  profileId: Number | null
+  profileId: number | null
 }>()
 
-const firstName = ref<String>("");
-const lastName = ref<String>("");
+const emit = defineEmits<{closeForm: []}>()
+
+const firstname = ref<string>("");
+const lastname = ref<string>("");
 const biography = ref("");
 const file = ref<File | null>();
+const available = ref<Boolean>(false);
+const error = ref<Boolean>(false)
+const isLoading = ref<Boolean>(false)
 
-onMounted(()=>{
+onMounted(async ()=>{
 
   if(props.profileId){
-    const profile = data.find(({id}:Profile)=>id===props.profileId)
+    const profile = (await profileService.showProfile(props.profileId)).data
     if (profile){
-      firstName.value = profile.firstname
-      lastName.value = profile.lastname
+      firstname.value = profile.firstname
+      lastname.value = profile.lastname
       biography.value = profile.biography
+      available.value = !!profile.public
     }
   }})
 
@@ -31,6 +38,38 @@ function handleFileInput(event: Event) {
     file.value = target.files[0];
   }
 }
+
+async function handleSubmit(){
+  isLoading.value = true
+  if(!props.profileId){
+    try{
+      await profileService.createProfile({
+      firstname:firstname.value,
+      lastname:lastname.value,
+      biography:biography.value,
+      public: available.value
+    })
+    
+    } catch {
+      error.value = true
+    }
+  } else {
+    try {
+      await profileService.updateProfile({
+      firstname:firstname.value,
+      lastname:lastname.value,
+      biography:biography.value,
+      public: available.value,
+      id: props.profileId
+    })
+    } catch {
+      error.value = true
+    }
+  }
+  isLoading.value = false
+  emit('closeForm');
+}
+
 </script>
 <template>
   <div>
@@ -43,7 +82,7 @@ function handleFileInput(event: Event) {
       >
       <div class="mt-2">
         <input
-          v-model="firstName"
+          v-model="firstname"
           id="profileFirstName"
           name="firstName"
           type="text"
@@ -60,7 +99,7 @@ function handleFileInput(event: Event) {
       >
       <div class="mt-2">
         <input
-          v-model="lastName"
+          v-model="lastname"
           id="profileLastName"
           name="lastName"
           type="text"
@@ -80,7 +119,7 @@ function handleFileInput(event: Event) {
           id="about"
           name="about"
           rows="3"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          class="pl-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         ></textarea>
       </div>
     </div>
@@ -129,13 +168,27 @@ function handleFileInput(event: Event) {
         </div>
       </div>
     </div>
+    <div class="relative flex gap-x-3 pt-1">
+              <div class="flex h-6 items-center">
+                <input v-model="available" id="comments" name="comments" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+              </div>
+              <div class="text-sm leading-6">
+                <label for="comments" class="font-medium text-gray-900">Publicly available</label>
+              </div>
+            </div>
+    <div class="text-red-500" v-if="error">
+      <p>Error during form submission</p>
+    </div>
 
     <div>
       <button
+        v-if="!isLoading"
         class="mt-4 rounded-md bg-cyan-500 p-2 font-semibold text-white hover:bg-cyan-600"
+        @click="handleSubmit"
       >
         Submit
       </button>
+      <progress-circular v-else></progress-circular>
     </div>
   </div>
 </template>

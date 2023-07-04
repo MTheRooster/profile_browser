@@ -1,12 +1,28 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import data from "../data/profiles";
+import { onMounted, ref } from "vue"
 import Profile from "../types/Profile"
+import ProfileService from "../services/ProfileService";
+import ProgressCircular from "./ProgressCircular.vue";
 
 const profiles = ref<Profile[]>([]);
-profiles.value = data
+const currentlyDeleting = ref<number[]>([])
 
 const emit = defineEmits<{editProfile: [id:number]}>()
+
+onMounted(async ()=>{
+    profiles.value = (await ProfileService.getProfiles()).data
+})
+
+async function deleteProfile(profileId: number, index:number){
+    try{
+        currentlyDeleting.value.push(index)
+        await ProfileService.deleteProfile(profileId)
+        profiles.value = (await ProfileService.getProfiles()).data
+    } catch (error) {
+        console.log(error)
+    }
+    currentlyDeleting.value.splice(currentlyDeleting.value.findIndex((value)=>value===index),1)
+}
 
 </script>
 <template>
@@ -18,8 +34,9 @@ const emit = defineEmits<{editProfile: [id:number]}>()
                     <p class="text-sm font-semibold leading-6 text-gray-900">{{ profile.firstname }} {{ profile.lastname }}</p>
                 </div>
             </div>
-            <div class=" md:flex md:flex-col md:items-end">
-                <img class="hover:bg-red-500 cursor-pointer rounded-full" src="../assets/trash-2.svg" />
+            <progress-circular v-if="currentlyDeleting.includes(index)"></progress-circular>
+            <div  v-else class=" md:flex md:flex-col md:items-end">
+                <img class="hover:bg-red-500 cursor-pointer rounded-full" src="../assets/trash-2.svg" @click="deleteProfile(profile.id, index)" />
                 <img class="hover:bg-blue-500 cursor-pointer rounded-full" src="../assets/edit-2.svg" @click="emit('editProfile',profile.id)"/>
             </div>
         </li>

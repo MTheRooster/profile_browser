@@ -24,6 +24,6 @@ export const useUserStore = defineStore("User", {
         }
     },
     getters: {
-        isLogged: (state) => !!state.user
+        isLogged: (state) => !!state
     }
 })

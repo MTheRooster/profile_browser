@@ -1,34 +1,39 @@
-import axios from 'axios'
-import type Profile from '../types/Profile'
+import axios from "axios";
+import type Profile from "../types/Profile";
 
 interface NewProfile {
-    firstname: string,
-    lastname: string,
-    biography: string
+  firstname: string;
+  lastname: string;
+  biography: string;
+  public: Boolean;
 }
 
 const apiClient = axios.create({
-    baseURL: '//localhost:3000',
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-    }
-})
+  baseURL: "http://localhost:8000/api",
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
 
 export default {
-    getProfiles() {
-        return apiClient.get('/profile')
-    },
+  getProfiles() {
+    return apiClient.get("/profiles");
+  },
 
-    createProfile(profile: NewProfile) {
-        return apiClient.post('/profile', profile)
-    },
+  showProfile(profileId: number){
+    return apiClient.get(`/profiles/${profileId}`)
+  },
 
-    updateProfile(profile:Profile) {
-        return apiClient.put(`/profile/${profile.id}`, profile)
-    },
+  createProfile(profile: NewProfile) {
+    return apiClient.post("/profiles", profile);
+  },
 
-    deleteProfile(profileId: Number) {
-        return apiClient.delete(`/profile/${profileId}`)
-    }
-}
+  updateProfile(profile: Profile) {
+    return apiClient.put(`/profiles/${profile.id}`, profile);
+  },
+
+  deleteProfile(profileId: Number) {
+    return apiClient.delete(`/profiles/${profileId}`);
+  },
+};

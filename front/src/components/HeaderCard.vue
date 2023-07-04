@@ -11,6 +11,8 @@ import { useUserStore } from "../stores/useUserStore"
 
 const store = useUserStore()
 
+const emit = defineEmits<{reloadProfiles: []}>()
+
 const addEditProfile: Ref<Boolean> = ref(false);
 const showProfileTable: Ref<Boolean> = ref(false);
 const editedProfile: Ref<Number|null> = ref(null)
@@ -30,6 +32,7 @@ function handleProfileEdition(profileID:Number) {
 function closeProfile() {
   addEditProfile.value=false
   editedProfile.value=null
+  emit('reloadProfiles')
 }
 </script>
 <template>
@@ -47,7 +50,7 @@ function closeProfile() {
       </div>
     </header>
     <modal-card v-if="addEditProfile" @close-modal="closeProfile" modal-title="New profile">
-      <profile-form :profileId="editedProfile"></profile-form>
+      <profile-form @close-form="closeProfile" :profileId="editedProfile"></profile-form>
     </modal-card>
     <modal-card v-if="showProfileTable" @close-modal="showProfileTable=false" modal-title="Profile List">
       <profile-list @edit-profile="handleProfileEdition"></profile-list>

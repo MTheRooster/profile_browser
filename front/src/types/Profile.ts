@@ -3,4 +3,5 @@ export default interface Profile {
     firstname: string;
     lastname: string;
     biography: string;
+    public: Boolean;
 }
