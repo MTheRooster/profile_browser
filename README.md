@@ -11,17 +11,15 @@ Pour mettre en place la partie back
 `composer install`
 
 Mettre en place une base de donnée MySQL
-Modifier le fichier /back/.env en fonction de la configuration de la base de données:
+Dans le répertoire /back créer un fichier .env
+Copier l’intégralité du contenu du fichier .env.example dans le fichier .env
+Remplacer les variables suivantes en fonction de la configuration locale de la base de données
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=nomDeLaBaseDeDonnée
+DB_DATABASE=NomDeLaBaseDeDonnée
 DB_USERNAME=root
-DB_PASSWORD=motDePasse
-
-Également dans le fichier .env modifier/ajouter les lignes suivantes pour permettre la communication back-front
-APP_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:3000
+DB_PASSWORD=MotDePasse
 
 Les photos étant stocké dans le répertoire local il faut éxécuter la commande suivante
 
@@ -45,7 +43,7 @@ puis
 et pour lancer en local:
 `npm run dev`
 
-Enfin une fois le front et le back lancer accéder au site via l’adresse **http://localhost:3000**
+Enfin une fois le front et le back lancés accéder au site via l’adresse **http://localhost:3000**
 
 Attention passer par l’adresse 127.0.0.1:3000 ne fonctionne pas. (domaine non reconnu côté back-end)
 
