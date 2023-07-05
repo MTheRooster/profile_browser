@@ -31,7 +31,8 @@ function handleSelection(index: number) {
         {{ profiles[selectedProfile].lastname }}
       </h1>
       <img
-        src="../assets/Angelina_Jolie.jpg"
+        v-if="profiles[selectedProfile].imagename"
+        :src="`http://localhost:8000/storage/images/${profiles[selectedProfile].imagename}`"
         class="float-left me-4 w-40 rounded-md border-8 border-white drop-shadow-lg"
       />
       <div>

@@ -15,7 +15,7 @@ const emit = defineEmits<{reloadProfiles: []}>()
 
 const addEditProfile: Ref<Boolean> = ref(false);
 const showProfileTable: Ref<Boolean> = ref(false);
-const editedProfile: Ref<Number|null> = ref(null)
+const editedProfile: Ref<number|null> = ref(null)
 
 const MenuContents: Ref<MenuContent[]> = ref([
   {title:"Ajouter un profil", callbackFunction: ()=>{addEditProfile.value = true}},
@@ -26,7 +26,7 @@ const MenuContents: Ref<MenuContent[]> = ref([
   }},
 ]);
 
-function handleProfileEdition(profileID:Number) {
+function handleProfileEdition(profileID:number) {
   editedProfile.value = profileID
   showProfileTable.value = false
   addEditProfile.value = true

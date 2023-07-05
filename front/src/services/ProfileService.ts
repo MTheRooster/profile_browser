@@ -1,5 +1,4 @@
 import axios from "axios";
-import type Profile from "../types/Profile";
 
 axios.defaults.withCredentials = true
 
@@ -8,13 +7,15 @@ interface NewProfile {
   lastname: string;
   biography: string;
   public: Boolean;
+  file: File | null | undefined
+  id?:number
 }
 
 const apiClient = axios.create({
   baseURL: "http://localhost:8000/api",
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
   withCredentials: true
 });
@@ -67,8 +68,16 @@ export default {
     return apiClient.post("/profiles", profile);
   },
 
-  updateProfile(profile: Profile) {
-    return apiClient.put(`/profiles/${profile.id}`, profile);
+  updateProfile(profile: NewProfile) {
+    return axios({
+      method: 'put',
+      url: `http://localhost:8000/api/profiles/${profile.id}`,
+      headers: {
+        Accept: "application/json",
+      },
+      withCredentials: true,
+      data: profile
+    });
   },
 
   deleteProfile(profileId: Number) {

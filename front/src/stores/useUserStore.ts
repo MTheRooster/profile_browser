@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import ProfileService from '../services/ProfileService'
-import cookies from 'js-cookie'
 
 interface User {
     laravel_session:string,
@@ -25,12 +24,18 @@ export const useUserStore = defineStore("User", {
             }
         },
         async logout () {
-            this.user = null
             await ProfileService.logout()
             localStorage.removeItem('user')
+            this.user = null
         }
     },
     getters: {
-        isLogged: (state) => {return !!state.user}
+        isLogged: (state) => {
+            const storedUser = localStorage.getItem('user')
+            if(storedUser){
+                state.user = JSON.parse(storedUser)
+            }
+            return !!state.user
+        }
     }
 })

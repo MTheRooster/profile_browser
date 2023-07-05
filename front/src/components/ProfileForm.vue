@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import data from "../data/profiles";
-import Profile from "../types/Profile";
 import profileService from "../services/ProfileService"
 import ProgressCircular from "./ProgressCircular.vue"
 
@@ -34,6 +32,7 @@ onMounted(async ()=>{
 
 function handleFileInput(event: Event) {
   const target = event.target as HTMLInputElement;
+  
   if (target && target.files) {
     file.value = target.files[0];
   }
@@ -47,7 +46,8 @@ async function handleSubmit(){
       firstname:firstname.value,
       lastname:lastname.value,
       biography:biography.value,
-      public: available.value
+      public: available.value,
+      file: file.value
     })
     
     } catch {
@@ -60,7 +60,8 @@ async function handleSubmit(){
       lastname:lastname.value,
       biography:biography.value,
       public: available.value,
-      id: props.profileId
+      id: props.profileId,
+      file: file.value
     })
     } catch {
       error.value = true

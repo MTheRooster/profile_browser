@@ -30,7 +30,7 @@ async function deleteProfile(profileId: number, index:number){
     <ul role="list" class="divide-y divide-gray-100">
         <li v-for="(profile,index) in profiles " :key="index" class="flex justify-between gap-x-6 py-5">
             <div class="flex gap-x-4">
-                <img class="h12 w-12 flex-none rounded-full bg-gray-50" src="../assets/Angelina_Jolie.jpg" alt=""/>
+                <img v-if="profile.imagename" class="h12 w-12 flex-none rounded-full bg-gray-50" :src="`http://localhost:8000/storage/images/${profile.imagename}`" alt=""/>
                 <div class="min-w-0 flex-auto">
                     <p class="text-sm font-semibold leading-6 text-gray-900">{{ profile.firstname }} {{ profile.lastname }}</p>
                 </div>

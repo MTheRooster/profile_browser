@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->text('biography');
             $table->boolean('public');
+            $table->string('imagename')->nullable();
             $table->timestamps();
         });
     }

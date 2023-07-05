@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -40,12 +41,23 @@ class ProfileController extends Controller
             'public' => 'required'
         ]);
 
-       return Profile::create([
+        $imageName = null;
+
+        if ($request->hasFile('file')) {
+            $request->validate([
+                'file' => 'file|image'
+            ]);
+            $imageName = $request->file('file')->hashName();
+            $request->file('file')->store('public/images');
+        }
+
+        return Profile::create([
             'user_id' => auth()->user()->id,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'biography' => $request->biography,
-            'public' => $request->public
+            'public' => $request->boolean('public'),
+            'imagename' => $imageName
         ]);
     }
 
@@ -53,11 +65,12 @@ class ProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update( Request $request, Profile $profile)
+    public function update(UpdateProfileRequest $request, Profile $profile)
     {
         if ($profile->user_id !== auth()->user()->id) {
             return 'Unauthorized';
         }
+
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required', 
@@ -69,6 +82,16 @@ class ProfileController extends Controller
         $profile->lastname = $request->lastname;
         $profile->biography = $request->biography;
         $profile->public = $request->public;
+
+        if ($request->hasFile('file')) {
+            $request->validate([
+                'file' => 'file|image'
+            ]);
+            $request->file('file')->store('public/images');
+            Storage::delete("public/images/$profile->imagename");
+
+            $profile->imagename = $request->file('file')->hashName();
+        }
 
         $profile->save();
         return $profile;
@@ -82,6 +105,8 @@ class ProfileController extends Controller
         if ($profile->user_id !== auth()->user()->id) {
             return 'Unauthorized';
         }
+        Storage::delete("public/images/$profile->imagename");
+
         return $profile->delete();
     }
 }

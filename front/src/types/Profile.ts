@@ -4,4 +4,5 @@ export default interface Profile {
     lastname: string;
     biography: string;
     public: Boolean;
+    imagename: string|null
 }
