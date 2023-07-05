@@ -10,6 +10,6 @@ class UserController extends Controller
 {
     //
     public function userProfiles(User $user){
-        return Profile::where('user_id',$user->id)->get();
+        return Profile::where('user_id',auth()->user()->id)->get();
     }
 }

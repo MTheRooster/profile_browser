@@ -22,7 +22,10 @@ class ProfileController extends Controller
      */
     public function show(Profile $profile)
     {
-        return $profile;
+        if($profile->public || auth()->user()->id === $profile->user_id) {
+            return $profile;
+        }
+        return "Unauthorized";
     }
 
     /**
@@ -38,7 +41,7 @@ class ProfileController extends Controller
         ]);
 
        return Profile::create([
-            'user_id' => 1,
+            'user_id' => auth()->user()->id,
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'biography' => $request->biography,
@@ -52,6 +55,9 @@ class ProfileController extends Controller
      */
     public function update( Request $request, Profile $profile)
     {
+        if ($profile->user_id !== auth()->user()->id) {
+            return 'Unauthorized';
+        }
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required', 
@@ -73,6 +79,9 @@ class ProfileController extends Controller
      */
     public function destroy(Profile $profile)
     {
+        if ($profile->user_id !== auth()->user()->id) {
+            return 'Unauthorized';
+        }
         return $profile->delete();
     }
 }

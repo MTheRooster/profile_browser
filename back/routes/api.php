@@ -20,9 +20,12 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('/user/{user}/profiles',[UserController::class, 'userProfiles'])->name('user.profile');
+    Route::delete('/profiles/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profiles/{profile}', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profiles', [ProfileController::class, 'store'])->name('profile.store');
+});
+
 Route::get('profiles',[ProfileController::class, 'index'])->name('profile.index');
 Route::get('profiles/{profile}',[ProfileController::class, 'show'])->name('profile.index');
-Route::delete('/profiles/{profile}', [ProfileController::class, 'destroy'])->name('profile.destroy');
-Route::post('/profiles', [ProfileController::class, 'store'])->name('profile.store');
-Route::put('/profiles/{profile}', [ProfileController::class, 'update'])->name('profile.update');
-Route::get('/user/{user}/profiles',[UserController::class, 'userProfiles'])->name('user.profile');

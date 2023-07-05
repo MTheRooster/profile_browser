@@ -1,6 +1,8 @@
 import axios from "axios";
 import type Profile from "../types/Profile";
 
+axios.defaults.withCredentials = true
+
 interface NewProfile {
   firstname: string;
   lastname: string;
@@ -14,9 +16,45 @@ const apiClient = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
   },
+  withCredentials: true
 });
 
+function csrfProtection() {
+  return axios({
+    method: 'get',
+    url: 'http://localhost:8000/sanctum/csrf-cookie',
+    withCredentials: true
+})}
+
 export default {
+
+  async login(credentials:{email:string, password: string}) {
+    await csrfProtection()
+    await  axios({
+      method: 'post',
+      url: 'http://localhost:8000/login',
+      withCredentials: true,
+      data: {
+          email: credentials.email,
+          password: credentials.password
+      }
+  })
+    return apiClient.get("/user")
+  },
+
+  async logout(){ 
+    await axios({
+    method: 'post',
+    url: 'http://localhost:8000/logout',
+    withCredentials: true
+    })
+
+},
+
+  getUsersProfiles(){
+    return apiClient.get("/user/1/profiles")
+  },
+
   getProfiles() {
     return apiClient.get("/profiles");
   },

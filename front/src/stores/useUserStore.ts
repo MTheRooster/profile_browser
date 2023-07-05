@@ -1,29 +1,36 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import ProfileService from '../services/ProfileService'
+import cookies from 'js-cookie'
+
+interface User {
+    laravel_session:string,
+    xsrftoken: string
+}
 
 export const useUserStore = defineStore("User", {
     state: () => ({
-        user: null
+        user: null as User | null
     }),
     actions: {
         async register (credentials:{email:string, password: string}) {
             try {
-                const {data} = (await axios.post('//localhost:3000/register',credentials))
-                this.user = data
-                localStorage.setItem('user', JSON.stringify(data))
-                axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
+                this.user = (await ProfileService.login(credentials)).data
+                localStorage.setItem('user', JSON.stringify(this.user))
                 return true
-            } catch {
-                console.log('Erreur lors de l’authentification')
+            } catch (error:any) {
+                console.log(error)
+                if(error.response.status === 422){
+                    alert("Email / mot de passe incorrect")
+                }
             }
         },
-        logout () {
+        async logout () {
             this.user = null
+            await ProfileService.logout()
             localStorage.removeItem('user')
-            axios.defaults.headers.common['Authorization'] = null
         }
     },
     getters: {
-        isLogged: (state) => !!state
+        isLogged: (state) => {return !!state.user}
     }
 })

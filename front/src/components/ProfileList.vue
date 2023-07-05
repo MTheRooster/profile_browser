@@ -7,17 +7,18 @@ import ProgressCircular from "./ProgressCircular.vue";
 const profiles = ref<Profile[]>([]);
 const currentlyDeleting = ref<number[]>([])
 
-const emit = defineEmits<{editProfile: [id:number]}>()
+const emit = defineEmits<{editProfile: [id:number],deleteProfile: []}>()
 
 onMounted(async ()=>{
-    profiles.value = (await ProfileService.getProfiles()).data
+    profiles.value = (await ProfileService.getUsersProfiles()).data
 })
 
 async function deleteProfile(profileId: number, index:number){
     try{
         currentlyDeleting.value.push(index)
         await ProfileService.deleteProfile(profileId)
-        profiles.value = (await ProfileService.getProfiles()).data
+        profiles.value = (await ProfileService.getUsersProfiles()).data
+        emit('deleteProfile')
     } catch (error) {
         console.log(error)
     }

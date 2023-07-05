@@ -20,7 +20,10 @@ const editedProfile: Ref<Number|null> = ref(null)
 const MenuContents: Ref<MenuContent[]> = ref([
   {title:"Ajouter un profil", callbackFunction: ()=>{addEditProfile.value = true}},
   {title:"Éditer un profil", callbackFunction: ()=>{showProfileTable.value = true}},
-  {title:"Log out", callbackFunction:()=>{store.logout}},
+  {title:"Log out", callbackFunction:()=>{
+    store.logout()
+    console.log('coucou')
+  }},
 ]);
 
 function handleProfileEdition(profileID:Number) {
@@ -53,7 +56,7 @@ function closeProfile() {
       <profile-form @close-form="closeProfile" :profileId="editedProfile"></profile-form>
     </modal-card>
     <modal-card v-if="showProfileTable" @close-modal="showProfileTable=false" modal-title="Profile List">
-      <profile-list @edit-profile="handleProfileEdition"></profile-list>
+      <profile-list @edit-profile="handleProfileEdition" @delete-profile="$emit('reloadProfiles')"></profile-list>
     </modal-card>
   </div>
 </template>
