@@ -10,9 +10,12 @@ Pour mettre en place la partie back
 
 `composer install`
 
-Mettre en place une base de donnée MySQL
+Mettre en place une base de donnée MySQL.
+
 Dans le répertoire /back créer un fichier .env
+
 Copier l’intégralité du contenu du fichier .env.example dans le fichier .env
+
 Remplacer les variables suivantes en fonction de la configuration locale de la base de données
 
 DB_CONNECTION=mysql
