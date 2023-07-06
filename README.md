@@ -14,11 +14,17 @@ Mettre en place une base de donnée MySQL
 Dans le répertoire /back créer un fichier .env
 Copier l’intégralité du contenu du fichier .env.example dans le fichier .env
 Remplacer les variables suivantes en fonction de la configuration locale de la base de données
+
 DB_CONNECTION=mysql
+
 DB_HOST=127.0.0.1
+
 DB_PORT=3306
+
 DB_DATABASE=NomDeLaBaseDeDonnée
+
 DB_USERNAME=root
+
 DB_PASSWORD=MotDePasse
 
 Les photos étant stocké dans le répertoire local il faut éxécuter la commande suivante
