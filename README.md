@@ -30,7 +30,7 @@ DB_USERNAME=root
 
 DB_PASSWORD=MotDePasse
 
-Les photos étant stocké dans le répertoire local il faut éxécuter la commande suivante
+Les photos étant stockées dans le répertoire local il faut éxécuter la commande suivante
 
 `php artisan storage:link`
 
